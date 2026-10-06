@@ -127,24 +127,14 @@
       );
 
       // Select one rhythmic realization.
-      compKind = [
-        \single,
-        \double,
-        \charleston,
-        \reverseCell,
-        \silent
-      ].wchoose([
-        0.30,
-        0.20,
-        0.20,
-        0.15,
-        0.15
-      ]);
+      compKind = compRhythm[\choose].value;
 
       // Construct the actual comping events.
       compEvents = compRhythm[compKind].value(
         compVoicing
       );
+
+
 
       // Remember only chords that actually sounded.
       if(compKind != \silent) {
