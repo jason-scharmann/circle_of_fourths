@@ -1,46 +1,15 @@
 (
 {
+  var nearest, chordQuality;
   var fits, nextThird;
-  var thirdOffset, nearestPitch;
 
-  thirdOffset = { |quality|
-    if(
-      (quality == \dom7)
-      or: { quality == \maj7 }
-    ) {
-      4
-    } {
-      if(
-        [\min7, \min7b5, \minMaj7].includes(quality)
-      ) {
-        3
-      } {
-        Error(
-          "Unknown chord quality: " ++ quality
-        ).throw;
-      }
-    }
-  };
+  nearest = thisProcess.interpreter.executeFile(
+    "../common/pitch/nearest.scd".resolveRelative
+  );
 
-  nearestPitch = { |pitchClass, target, low, high|
-    var candidates, index;
-
-    candidates = (low..high).select { |note|
-      (note % 12) == pitchClass
-    };
-
-    if(candidates.isEmpty) {
-      Error(
-        "No valid next third fits the range."
-      ).throw;
-    };
-
-    index = candidates.minIndex { |note|
-      (note - target).abs
-    };
-
-    candidates[index]
-  };
+  chordQuality = thisProcess.interpreter.executeFile(
+    "../common/harmony/chord-quality.scd".resolveRelative
+  );
 
   nextThird = {
     |third, notes, quality, nextQuality,
@@ -51,7 +20,8 @@
     var nextThirdPitchClass;
 
     rootPitchClass = (
-      third - thirdOffset.value(quality)
+      third
+      - chordQuality[\thirdOffset].value(quality)
     ) % 12;
 
     nextRootPitchClass = (
@@ -60,10 +30,10 @@
 
     nextThirdPitchClass = (
       nextRootPitchClass
-      + thirdOffset.value(nextQuality)
+      + chordQuality[\thirdOffset].value(nextQuality)
     ) % 12;
 
-    nearestPitch.value(
+    nearest[\inRange].value(
       nextThirdPitchClass,
       notes.last,
       low,
@@ -178,4 +148,3 @@
   )
 }.value
 )
-
