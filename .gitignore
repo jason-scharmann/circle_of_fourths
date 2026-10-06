@@ -1,0 +1,14 @@
+# Generated recordings
+/recordings/
+
+# Local experiments
+/scratch.scd
+
+# Editor temporary files
+*.swp
+*.swo
+*~
+.nvimlog
+
+# OS metadata
+.DS_Store

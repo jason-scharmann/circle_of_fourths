@@ -9,9 +9,11 @@
   var fullTime = 120.0;
   var fadeOut = 3.0;
   var totalTime = fadeIn + fullTime + fadeOut;
-  var recordPath =
-      thisProcess.platform.recordingsDir +/+
-      ("circle_of_fourths_" ++ Date.getDate.stamp ++ ".wav");
+  var projectDir = "record-scratch.scd".resolveRelative.dirname;
+  var recordingsDir = projectDir +/+ "recordings";
+  var recordPath;
+  if(File.exists(recordingsDir).not) {File.mkdir(recordingsDir);};
+  recordPath = recordingsDir +/+ ("circle_of_fourths_" ++ Date.getDate.stamp ++ ".wav");
   var player;
 
   figure = thisProcess.interpreter.executeFile("figure.scd".resolveRelative);
