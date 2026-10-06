@@ -1,5 +1,8 @@
 (
 {
+  var tempo = 96 / 60;
+  var beatsPerBar = 4;
+
   var figure, traversal, realize, harmony;
   var bass, bassline, lead;
   var drums, ride;
@@ -302,7 +305,9 @@
       drums[\install].value;
     },
 
-    pattern: pattern
+    pattern: pattern,
+    tempo: tempo,
+    beatsPerBar: beatsPerBar
   )
 }.value
 )

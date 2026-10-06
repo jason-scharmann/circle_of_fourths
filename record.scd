@@ -2,20 +2,12 @@
 {
   var performance, clock, player;
 
-  var bpm = 96;
-  var beatsPerBar = 4;
+  var tempo, beatsPerBar, beatDur;
+  var fadeIn, fullTime, fadeOut, totalTime;
 
   var recordBars = 48;
   var fadeBars = 2;
   var fullBars = recordBars - (fadeBars * 2);
-
-  var tempo = bpm / 60;
-  var beatDur = tempo.reciprocal;
-
-  var fadeIn = fadeBars * beatsPerBar * beatDur;
-  var fullTime = fullBars * beatsPerBar * beatDur;
-  var fadeOut = fadeBars * beatsPerBar * beatDur;
-  var totalTime = recordBars * beatsPerBar * beatDur;
 
   var projectDir = "record.scd".resolveRelative.dirname;
   var recordingsDir = projectDir +/+ "recordings";
@@ -34,6 +26,15 @@
   performance = thisProcess.interpreter.executeFile(
     "performance.scd".resolveRelative
   );
+
+  tempo = performance[\tempo];
+  beatsPerBar = performance[\beatsPerBar];
+  beatDur = tempo.reciprocal;
+
+  fadeIn = fadeBars * beatsPerBar * beatDur;
+  fullTime = fullBars * beatsPerBar * beatDur;
+  fadeOut = fadeBars * beatsPerBar * beatDur;
+  totalTime = recordBars * beatsPerBar * beatDur;
 
   Server.default.waitForBoot({
     var server = Server.default;
@@ -98,8 +99,6 @@
     player = performance[\pattern].play(clock);
 
     ("Recording: " ++ recordPath).postln;
-
-    // 3 s fade-in + 120 s full level + 3 s fade-out = 126 s.
 
     SystemClock.sched(
       totalTime + server.latency + 0.5,

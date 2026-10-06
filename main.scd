@@ -11,7 +11,9 @@
 
     Server.default.sync;
 
-    clock = TempoClock.new(96 / 60);
+    clock = TempoClock.new(
+      performance[\tempo]
+    );
 
     performance[\pattern].play(clock);
   });
