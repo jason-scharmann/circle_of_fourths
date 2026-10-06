@@ -5,24 +5,24 @@
 
   var figure, traversal, realize, leadRhythm, harmony;
   var bass, bassline, lead;
-  var drums, ride;
+  var rideSynth, ride;
   var comp, comping, compRhythm;
   var pattern;
 
   figure = thisProcess.interpreter.executeFile(
-    "figure.scd".resolveRelative
+    "lead/figure.scd".resolveRelative
   );
 
   traversal = thisProcess.interpreter.executeFile(
-    "traversal.scd".resolveRelative
+    "lead/traversal.scd".resolveRelative
   );
 
   realize = thisProcess.interpreter.executeFile(
-    "realize.scd".resolveRelative
+    "lead/realize.scd".resolveRelative
   );
 
   leadRhythm = thisProcess.interpreter.executeFile(
-    "lead-rhythm.scd".resolveRelative
+    "lead/rhythm.scd".resolveRelative
   );
 
   harmony = thisProcess.interpreter.executeFile(
@@ -30,35 +30,35 @@
   );
 
   bass = thisProcess.interpreter.executeFile(
-    "bass.scd".resolveRelative
+    "bass/synth.scd".resolveRelative
   );
 
   bassline = thisProcess.interpreter.executeFile(
-    "bassline.scd".resolveRelative
+    "bass/line.scd".resolveRelative
   );
 
   lead = thisProcess.interpreter.executeFile(
-    "lead.scd".resolveRelative
+    "lead/synth.scd".resolveRelative
   );
 
-  drums = thisProcess.interpreter.executeFile(
-    "drums.scd".resolveRelative
+  rideSynth = thisProcess.interpreter.executeFile(
+    "drums/ride-synth.scd".resolveRelative
   );
 
   ride = thisProcess.interpreter.executeFile(
-    "ride.scd".resolveRelative
+    "drums/ride.scd".resolveRelative
   );
 
   comp = thisProcess.interpreter.executeFile(
-    "comp.scd".resolveRelative
+    "comp/synth.scd".resolveRelative
   );
 
   comping = thisProcess.interpreter.executeFile(
-    "comping.scd".resolveRelative
+    "comp/voicing.scd".resolveRelative
   );
 
   compRhythm = thisProcess.interpreter.executeFile(
-    "comp-rhythm.scd".resolveRelative
+    "comp/rhythm.scd".resolveRelative
   );
 
   pattern = Pspawner({ |sp|
@@ -80,7 +80,7 @@
     sp.par(
       Pbindf(
         Pseq(ride[\basic].value, inf),
-        \instrument, drums[\rideName],
+        \instrument, rideSynth[\rideName],
         \amp, Pkey(\amp) * 0.55
       )
     );
@@ -109,7 +109,9 @@
         rootDelta
       );
 
-      realization = leadRhythm[\base].value(quality);
+      realization = leadRhythm[\base].value(
+        quality
+      );
 
       // Bass uses the SAME quality and root movement.
       bassResult = bassline[\step].value(
@@ -134,8 +136,6 @@
         compVoicing
       );
 
-
-
       // Remember only chords that actually sounded.
       if(compKind != \silent) {
         previousCompVoicing = compVoicing;
@@ -143,7 +143,6 @@
 
       // Sparse overrides follow comping selection, so a third-only
       // pulse is chosen only when the piano supplies the full harmony.
-      // This is the only sparse probability decision (14%).
       sparseRealization = leadRhythm[\sparseOverride].value(
         quality,
         compKind,
@@ -154,7 +153,6 @@
       if(sparseRealization.notNil) {
         realization = sparseRealization;
       };
-
 
       // Realize exactly once, after the final rhythm choice.
       realized = realize[realization].value(
@@ -200,7 +198,7 @@
       bass[\install].value;
       lead[\install].value;
       comp[\install].value;
-      drums[\install].value;
+      rideSynth[\install].value;
     },
 
     pattern: pattern,
