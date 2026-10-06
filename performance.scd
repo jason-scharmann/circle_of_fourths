@@ -6,7 +6,7 @@
   var figure, traversal, realize, leadRhythm, harmony;
   var bass, bassline, lead;
   var rideSynth, ride;
-  var comp, comping, compRhythm;
+  var comp, voicing, compRhythm;
   var pattern;
 
   figure = thisProcess.interpreter.executeFile(
@@ -53,8 +53,8 @@
     "comp/synth.scd".resolveRelative
   );
 
-  comping = thisProcess.interpreter.executeFile(
-    "comp/voicing.scd".resolveRelative
+  voicing = thisProcess.interpreter.executeFile(
+    "common/voicing/close-position.scd".resolveRelative
   );
 
   compRhythm = thisProcess.interpreter.executeFile(
@@ -122,8 +122,7 @@
         rootDelta
       );
 
-      // Generate the comping voicing from the selected figure.
-      compVoicing = comping[\voice].value(
+      compVoicing = voicing[\voice].value(
         leadResult[\notes],
         previousCompVoicing
       );
